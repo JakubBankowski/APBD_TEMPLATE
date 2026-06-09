@@ -1,23 +1,36 @@
+using APBD_TEMPLATE.DTOs;
+using APBD_TEMPLATE.Exceptions;
 using APBD_TEMPLATE.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APBD_TEMPLATE.Controllers;
 
 [ApiController]
-[Route("api/members")]
-public class BorrowingsController : Controller
+[Route("api/borrowings")]
+public class BorrowingsController : ControllerBase
 {
-    private readonly IMemberService _service;
+    private readonly IBorrowingService _service;
     
-    public BorrowingsController(IMemberService service)
+    public BorrowingsController(IBorrowingService service)
     {
         _service = service;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetMembers(string? email)
+    [HttpPost("{id}/result")]
+    public async Task<IActionResult> ReturnBorrowing(int id, [FromBody] ReturnBorrowingRequestDto dto)
     {
-        var result = await _service.GetAllAsync(email);
-        return Ok(result);
+        try
+        {
+            await _service.ReturnBorrowingAsync(id, dto);
+            return NoContent();
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (BadRequestException e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 }
