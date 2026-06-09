@@ -1,4 +1,6 @@
 //using APBD_TEMPLATE.Models;
+
+using APBD_TEMPLATE.Migrations;
 using Microsoft.EntityFrameworkCore;
 
 namespace APBD_TEMPLATE.Data;
@@ -7,84 +9,88 @@ public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options){}
 
-    /*
-    public DbSet<Appointment> Appointments { get; set; } = null!;
-    public DbSet<AppointmentService> AppointmentServices { get; set; } = null!;
-    public DbSet<Doctor> Doctors { get; set; } = null!;
-    public DbSet<MedicalService> MedicalServices { get; set; } = null!;
-    public DbSet<Patient> Patients { get; set; } = null!;
-
+    
+    public DbSet<Author> Authors { get; set; } = null!;
+    public DbSet<Book> Books { get; set; } = null!;
+    public DbSet<Borrowing> Borrowings { get; set; } = null!;
+    public DbSet<Member> Members { get; set; } = null!;
+    public DbSet<Review> Reviews { get; set; } = null!;
+    
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         
-        modelBuilder.Entity<AppointmentService>()
-            .HasKey(a => new { a.AppointmentId, a.ServiceId });
+        modelBuilder.Entity<Review>()
+            .HasKey(r => new { r.MemberId, r.BookId });
 
-        var appointments = new[]
+        var authors = new[]
         {
-            new Appointment
+            new Author
             {
-                AppointmentId = 1,
-                PatientId = 1,
-                DoctorId = 1,
-                AppointmentDate = DateOnly.FromDateTime(DateTime.Now),
-                Status = "Finished"
+                AuthorId = 1,
+                FirstName = "John",
+                LastName = "Doe",
+                Email = "johndoe@gmail.com",
+                Country = "USA",
+                BirthYear = 1983
             }
         };
         
-        var doctors = new[]
+        var books = new[]
         {
-            new Doctor
+            new Book
             {
-                DoctorId = 1,
+                BookId = 1,
+                Title = "The Life",
+                ISBN = "11123",
+                PublishedYear = 1888,
+                AuthorsId = 1
+            }
+        };
+
+        var borrowings = new[]
+        {
+            new Borrowing
+            {
+                BorrowingId = 1,
+                BorrowDate = new DateTime(2012, 12, 31, 16, 45, 0),
+                ReturnDate =  null,
+                Status = "Borrowed",
+                MemberId = 1,
+                BookId = 1
+            }
+        };
+
+        var members = new[]
+        {
+            new Member
+            {
+                MemberId = 1,
                 FirstName = "John",
                 LastName = "Doe",
-                Specialization = "Dentist",
+                Email = "johndoe@gmail.com",
                 Phone = "111111111"
             }
         };
 
-        var patients = new[]
+        var reviews = new[]
         {
-            new Patient
+            new Review
             {
-                PatientId = 1,
-                FirstName = "John",
-                LastName = "Doe",
-                DateOfBirth = DateTime.Today,
-                Phone = "111111111"
-            }
-        };
-
-        var appointmentServices = new[]
-        {
-            new AppointmentService
-            {
-                AppointmentId = 1,
-                ServiceId = 1,
-                Quantity = 1,
-                PerformedAt = DateOnly.FromDateTime(DateTime.Now),
-            }
-        };
-
-        var medicalServices = new[]
-        {
-            new MedicalService
-            {
-                ServiceId = 1,
-                Name = "Medical",
-                Description = "Medical",
-                Price = 1000,
-                DurationMinutes = 45
+                MemberId = 1,
+                BookId = 1,
+                Rating = 5,
+                Comment = "Reviewed",
+                ReviewDate = new DateTime(2012, 12, 31, 16, 45, 0),
             }
         };
         
-        modelBuilder.Entity<Appointment>().HasData(appointments);
-        modelBuilder.Entity<Doctor>().HasData(doctors);
-        modelBuilder.Entity<Patient>().HasData(patients);
-        modelBuilder.Entity<AppointmentService>().HasData(appointmentServices);
-        modelBuilder.Entity<MedicalService>().HasData(medicalServices);
+        modelBuilder.Entity<Author>().HasData(authors);
+        modelBuilder.Entity<Book>().HasData(books);
+        modelBuilder.Entity<Borrowing>().HasData(borrowings);
+        modelBuilder.Entity<Member>().HasData(members);
+        modelBuilder.Entity<Review>().HasData(reviews);
     }
-    */
+    
 }
